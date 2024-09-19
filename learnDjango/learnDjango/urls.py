@@ -20,7 +20,8 @@ from firstApp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('about-page/',views.about),
-    path('',views.home),
-    path('courses/',views.courses)
+    path('',views.home,name='home'),
+    path('courses/',views.courses),
+    path('students/',views.students)
 
 ]

@@ -12,4 +12,10 @@ def home(request):
 
 def courses(request):
    return render(request,"courses.html",{})
-   
+
+def students(request):
+   context={"id":"",
+            "name":"Nisha",
+            "subjects":["Maths","Science","English"]
+            }
+   return render(request,"students.html",context)
