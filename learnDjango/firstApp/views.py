@@ -32,6 +32,12 @@ def book(request):
    
    return render(request,"book.html",context)
 
+# request.GET
+# request.POST
 
 def employee(request):
-   return render(request,"employee.html")
+   if request.method=='GET':
+      return render(request,"employee.html")
+   if request.method=='POST':
+      employeeName=request.POST.get("employeeName")
+      return render(request,"employee.html",{"empname": employeeName})
