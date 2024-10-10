@@ -4,3 +4,6 @@ from django.shortcuts import render
 
 def products(request):
     return render(request,"products.html")
+
+def royalCanin(request):
+    return render(request,"products.html")
