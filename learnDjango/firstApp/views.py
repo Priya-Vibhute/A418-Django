@@ -1,4 +1,5 @@
 from django.shortcuts import render,HttpResponse
+from django.views import View
 #  A   A()
 # Create your views here.
 
@@ -41,3 +42,13 @@ def employee(request):
    if request.method=='POST':
       employeeName=request.POST.get("employeeName")
       return render(request,"employee.html",{"empname": employeeName})
+   
+
+
+class MyView(View):
+
+   def get(self,request):
+      return render(request,"my_view.html")
+   
+   def post(self,request):
+      return render(request,"success.html")
