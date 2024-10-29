@@ -51,9 +51,22 @@
         </ul>
 
         
+        {% if request.user.first_name %}
 
-        <a class="btn btn-warning mx-2" href="#" role="button">Login</a>
-        <a class="btn" href="#" role="button" id="button">Logout</a>
+              <a class="btn btn-warning mx-2" href="{% url 'login'%}" 
+              role="button">{{request.user.first_name}}</a>
+
+              <a class="btn" href="#" role="button" id="button">Logout</a>
+
+        {% else %}
+         
+              <a class="btn btn-warning mx-2" href="{% url 'login'%}" role="button">Login</a>
+              <a class="btn" href="#" role="button" id="button">Register</a>
+
+        {% endif%}
+        
+      
+      
 
 
       </div>
@@ -130,12 +143,12 @@
 
       <div class="col">
         <div class="card p-2">
-         
-          <img src="{%static 'img/dog-food.jpg'%}" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title bg-warning p-3">Dog Food</h5>
-          </div>
-
+        <a href="{% url 'category-detail' slug='dog-food' %}">
+               <img src="{%static 'img/dog-food.jpg'%}" class="card-img-top" alt="...">
+               <div class="card-body">
+                 <h5 class="card-title bg-warning p-3">Dog Food</h5>
+               </div>
+        </a>
 
         </div>
       </div>

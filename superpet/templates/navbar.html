@@ -26,9 +26,19 @@
 
         </ul>
 
+    {% if request.user.first_name %}
+
+              <a class="btn btn-warning mx-2" href="{% url 'login'%}" 
+              role="button">{{request.user.first_name}}</a>
+
+        {% else %}
+         
+              <a class="btn btn-warning mx-2" href="{% url 'login'%}" role="button">Login</a>
+
+        {% endif%}
+        
         
 
-        <a class="btn btn-warning mx-2" href="#" role="button">Login</a>
         <a class="btn" href="#" role="button" id="button">Logout</a>
 
 
