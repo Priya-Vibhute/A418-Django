@@ -10,6 +10,18 @@
         <p class="card-text">{{p.product_description}}</p>
         <p class="card-text">Price : {{p.product_price}}</p>
         <p class="card-text">Brand : {{p.product_brand}}</p>
+
+        <form action="{% url 'add-to-cart' p.id %}">
+
+          <button type="button" onclick="updateQuantity(-1,{{p.id}})">-</button>
+
+          <input type="number" name="quantity" id="quantity{{p.id}}" value="1" min="1" max="10">
+
+          <button type="button" onclick="updateQuantity(1,{{p.id}})">+</button>
+          
+          <input class="btn btn-primary" type="submit" value="Add to Cart">
+
+        </form>
        
 
       </div>
