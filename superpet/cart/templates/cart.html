@@ -17,6 +17,19 @@
                                  <h5 class="card-title">{{cartitem.products.product_name}}</h5>
                                  <p class="card-text">Quantity :{{cartitem.quantity}}</p>
                                   <p class="card-text">Price :{{cartitem.products.product_price}}</p>
+
+<form action="{% url 'add-to-cart' p.id %}">
+
+          <button type="button" onclick="updateQuantity(-1,{{p.id}})">-</button>
+
+          <input type="number" name="quantity" id="quantity{{p.id}}" value="1" min="1" max="10">
+
+          <button type="button" onclick="updateQuantity(1,{{p.id}})">+</button>
+          
+          <input class="btn btn-primary" type="submit" value="Add to Cart">
+
+        </form>
+       
                                </div>
                              </div>
                            </div>
