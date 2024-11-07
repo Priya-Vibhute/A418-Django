@@ -25,6 +25,8 @@ urlpatterns = [
     path('students/',views.students),
     path('book/',views.book),
     path('employee/',views.employee),
-    path('class-based-view/',views.MyView.as_view(),name="class-based-view")
+    path('class-based-view/',views.MyView.as_view(),name="class-based-view"),
+     path('filters/',views.learnFilters),
+    
 
 ]

@@ -52,3 +52,6 @@ class MyView(View):
    
    def post(self,request):
       return render(request,"success.html")
+   
+def learnFilters(request):
+   return render(request,"template_filters.html",{"data":"Django"})
