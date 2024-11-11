@@ -1,6 +1,9 @@
 from django.shortcuts import render,HttpResponseRedirect
-from .models import Cart,CartItem
+from .models import Cart,CartItem,Order,OrderItem
 from products.models import Product
+from .forms import OrderForm
+import uuid
+
 
 # Create your views here.
 
@@ -9,6 +12,7 @@ def add_to_cart(request,productId):
     print(request.user)
     currentUser=request.user
     cart,created=Cart.objects.get_or_create(user=currentUser)  
+    request.session["cart_id"]=cart.id
     cartitem,created=CartItem.objects.get_or_create(cart=cart,products=Product.customManager.get(id=productId))
     quantity=int(request.GET.get("quantity"))
 
@@ -41,6 +45,40 @@ def delete_cartitem(request,cartitemId):
     return HttpResponseRedirect("/cart")
 
 def checkout(request):
-    return render(request,"checkout.html")
+    if request.method=="GET":
+        form=OrderForm()
+        print(request.session.get("cart_id"),"*****************")
+        return render(request,"checkout.html",{"form":form})
+    if request.method=="POST":
+        form=OrderForm(request.POST)
+        print("valid????",form.is_valid())
+        if form.is_valid():
+            print(form.cleaned_data)
+            order=Order.objects.create(order_id=uuid.uuid4().hex,
+                                 user=request.user,
+                                 address_line_1=form.cleaned_data["address_line_1"],
+                                 address_line_2=form.cleaned_data["address_line_2"],
+                                 city=form.cleaned_data["city"],
+                                 state=form.cleaned_data["state"],
+                                 pincode=form.cleaned_data["pincode"],
+                                 phone_no=form.cleaned_data["phone_no"])
+            
+            cart_id=request.session.get("cart_id")
+            cart=Cart.objects.get(id= cart_id)
+            cartitems=cart.cartitem_set.all()
+
+
+
+            for cartitem in cartitems:
+                OrderItem.objects.create(order=order,
+                                         quantity=cartitem.quantity,
+                                         products=cartitem.products)
+
+
+    return HttpResponseRedirect("/cart/payment")
+
+
+def payment(request):
+    return render(request,"payment.html")
 
 

@@ -1,3 +1,4 @@
+from typing import Any
 from django.shortcuts import render
 from .models  import Product,Category
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
@@ -47,5 +48,4 @@ class CategoryDetailView(DetailView):
     slug_field="category_slug"
     context_object_name="category_obj"
 
-
-   
+    

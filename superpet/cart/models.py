@@ -23,4 +23,16 @@ class Order(models.Model):
     state=models.CharField(null=False,max_length=100)
     pincode=models.IntegerField(null=False)
     phone_no=models.BigIntegerField(null=False)
+    created_at=models.DateTimeField(auto_now_add=True,null=True)
+    updated_at=models.DateTimeField(auto_now=True,null=True)
+    paid=models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user.first_name}   ||  {self.created_at}"
+
+class OrderItem(models.Model):
+    order=models.ForeignKey(Order,on_delete=models.CASCADE)
+    quantity=models.IntegerField(default=0)
+    products=models.ForeignKey(Product,on_delete=models.PROTECT)
+
     
