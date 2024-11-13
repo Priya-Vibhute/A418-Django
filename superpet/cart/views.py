@@ -3,7 +3,7 @@ from .models import Cart,CartItem,Order,OrderItem
 from products.models import Product
 from .forms import OrderForm
 import uuid
-
+import razorpay
 
 # Create your views here.
 
@@ -75,10 +75,13 @@ def checkout(request):
                                          products=cartitem.products)
 
 
-    return HttpResponseRedirect("/cart/payment")
+    return HttpResponseRedirect("/cart/payment/"+order.order_id)
 
 
-def payment(request):
-    return render(request,"payment.html")
+def payment(request,orderId):
+    client=razorpay.Client(auth=("rzp_test_9OqmIDeq85cvr3","LVkt6Cs9VskcAarHG1ryJNdr"))
+    data = { "amount": 500, "currency": "INR", "receipt": orderId }
+    payment=client.order.create(data=data)
+    return render(request,"payment.html",{"payment":payment})
 
 
