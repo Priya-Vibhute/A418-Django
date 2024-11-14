@@ -4,9 +4,15 @@ from products.models import Product
 from .forms import OrderForm
 import uuid
 import razorpay
+from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import send_mail
+from superpet.settings import EMAIL_HOST_USER
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 
+@login_required(login_url="/login")
 def add_to_cart(request,productId):
     print("****************",productId,"************************")
     print(request.user)
@@ -24,6 +30,7 @@ def add_to_cart(request,productId):
     cartitem.save()
     return HttpResponseRedirect("/products")
 
+@login_required(login_url="/login")
 def display_cart(request):
     currentUser=request.user
     cart=Cart.objects.get(user=currentUser)
@@ -33,17 +40,18 @@ def display_cart(request):
         total+=cartitem.quantity*cartitem.products.product_price
     return render(request,"cart.html",{"cartitems": cartitems,"total":total})
 
+@login_required(login_url="/login")
 def update_cart(request,cartitemId):
     cartitem=CartItem.objects.get(id=cartitemId)
     cartitem.quantity=request.GET.get("quantity")
     cartitem.save()
     return HttpResponseRedirect("/cart")
-
+@login_required(login_url="/login")
 def delete_cartitem(request,cartitemId):
     cartitem=CartItem.objects.get(id=cartitemId)
     cartitem.delete()
     return HttpResponseRedirect("/cart")
-
+@login_required(login_url="/login")
 def checkout(request):
     if request.method=="GET":
         form=OrderForm()
@@ -77,11 +85,41 @@ def checkout(request):
 
     return HttpResponseRedirect("/cart/payment/"+order.order_id)
 
-
+@login_required(login_url="/login")
 def payment(request,orderId):
+    order=Order.objects.get(order_id=orderId)
+    orderitems=order.orderitem_set.all()
+    total=0
+    for orderitem in orderitems:
+        total+=orderitem.quantity*orderitem.products.product_price
+
     client=razorpay.Client(auth=("rzp_test_9OqmIDeq85cvr3","LVkt6Cs9VskcAarHG1ryJNdr"))
-    data = { "amount": 500, "currency": "INR", "receipt": orderId }
+    data = { "amount": total*100, "currency": "INR", "receipt": orderId }
     payment=client.order.create(data=data)
     return render(request,"payment.html",{"payment":payment})
+
+
+@csrf_exempt
+def paymentSuccess(request,orderId):
+    razorpay_response={
+        "razorpay_payment_id":request.POST.get("razorpay_payment_id"),
+        "razorpay_order_id":request.POST.get("razorpay_order_id"),
+        "razorpay_signature":request.POST.get("razorpay_signature")
+    }
+    client=razorpay.Client(auth=("rzp_test_9OqmIDeq85cvr3","LVkt6Cs9VskcAarHG1ryJNdr"))
+    payment_check=client.utility.verify_payment_signature(razorpay_response)
+    if payment_check:
+        print("order is paid")
+        order=Order.objects.get(order_id=orderId)
+        order.paid=True
+        order.save()
+        send_mail(f"[{order.order_id} placed]",
+                  "Order placed successfully...",
+                  EMAIL_HOST_USER,
+                  ["artilachure@gmail.com","shankkarpal46@gmail.com","tgorivale2@gmail.com"],
+                  fail_silently=False)
+
+    return render(request,"success.html")
+
 
 

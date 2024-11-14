@@ -3,6 +3,9 @@ from django.shortcuts import render
 from .models  import Product,Category
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
 # Create your views here.
+from django.utils.decorators import method_decorator
+from django.contrib.admin.views.decorators import staff_member_required
+
 
 def products(request):
     return render(request,"products.html")
@@ -24,17 +27,20 @@ class ProductDetailView(DetailView):
     model=Product
     template_name="products/productdetail.html"
 
+
+@method_decorator(staff_member_required,name="dispatch")
 class ProductCreateView(CreateView):
     model=Product
     fields="__all__"
     success_url="/products"
 
-
+@method_decorator(staff_member_required,name="dispatch")
 class ProductUpdateView(UpdateView):
     model=Product
     fields="__all__"
     success_url="/products"
-
+    
+@method_decorator(staff_member_required,name="dispatch")
 class ProductDeleteView(DeleteView):
     model=Product
     success_url="/products"

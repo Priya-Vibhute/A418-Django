@@ -48,7 +48,7 @@ def employee(request):
 class MyView(View):
 
    def get(self,request):
-      return render(request,"my_view.html")
+      return render(request,"my_view.h tml")
    
    def post(self,request):
       return render(request,"success.html")
