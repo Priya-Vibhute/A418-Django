@@ -1,12 +1,12 @@
 from django.shortcuts import render,HttpResponseRedirect
-from django.contrib.auth.forms import UserCreationForm
-from .forms import CustomUserCreationForm
+from django.contrib.auth.forms import UserCreationForm,PasswordChangeForm
+from .forms import CustomUserCreationForm,CustomUserChangeForm
 from django.contrib.auth import authenticate,login,logout
 from products.models import Product
 from django.contrib.auth.decorators import user_passes_test
 
+
 def home(request):
-    
     return render(request,"index.html")
 
 def user_login(request):
@@ -56,4 +56,25 @@ def admin(request):
 
 
 def profile(request):
-    return render(request,"profile.html")
+    message=None
+    if request.method=='GET':
+         form=CustomUserChangeForm(instance=request.user)
+         
+    if request.method=='POST':
+         form=CustomUserChangeForm(instance=request.user,data=request.POST)
+         if form.is_valid():
+             form.save()
+             message="User updated successfully..."
+
+    return render(request,"profile.html",{"form":form,"message":message})
+
+
+def changePassword(request):
+    if request.method=="GET":
+        form=PasswordChangeForm(user=request.user)
+        return render(request,"change_password.html",{"form":form})
+    if request.method=="POST":
+        form=PasswordChangeForm(request.user,request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect("/login")

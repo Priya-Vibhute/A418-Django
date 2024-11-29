@@ -28,7 +28,8 @@ def add_to_cart(request,productId):
         cartitem.quantity=cartitem.quantity+quantity
 
     cartitem.save()
-    return HttpResponseRedirect("/products")
+    print("request.META.get('HTTP_REFERER')",request.META.get("HTTP_REFERER"))
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 @login_required(login_url="/login")
 def display_cart(request):
