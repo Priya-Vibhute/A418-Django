@@ -133,4 +133,8 @@ def paymentSuccess(request,orderId):
     return render(request,"success.html",{"orderitems":order.orderitem_set.all()})
 
 
+def orders(request):
+    orders=Order.objects.filter(user=request.user)
+    return render(request,"orders.html",{"orders":orders})
+
 
