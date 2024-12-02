@@ -130,7 +130,7 @@ def paymentSuccess(request,orderId):
         for cartitem in  cartitems:
              cartitem.delete()
 
-    return render(request,"success.html")
+    return render(request,"success.html",{"orderitems":order.orderitem_set.all()})
 
 
 

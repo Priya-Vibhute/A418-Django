@@ -1,7 +1,39 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 
 {% block content %}
 
    <h1>Payment successfull</h1>
+
+   <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">id</th>
+          <th scope="col">Product name</th>
+          <th scope="col">Price</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Total</th>
+    
+        </tr>
+      </thead>
+      <tbody>
+    
+      {% for orderitem in orderitems %}
+    
+        <tr>
+          <th scope="row">{{orderitem.products.id}}</th>
+          <td>{{orderitem.products.product_name}}</td>
+          <td>{{orderitem.products.product_price}}</td>
+          <td>{{orderitem.quantity}}</td>
+          <td>{{orderitem.quantity|multiply:orderitem.products.product_price}}</td>
+    
+        </tr>
+      {% endfor %}
+    
+    
+    
+       
+      </tbody>
+    </table>
 
 {% endblock %}
