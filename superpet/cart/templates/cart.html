@@ -1,8 +1,9 @@
 {% extends 'base.html'%}
 {% load custom_filters %}
+{% load static %}
 
 {% block content %}
-
+{% if cartitems.count %}
           <h1>Cart</h1>
           <h1>Total:{{total}}</h1>
           <hr>
@@ -77,4 +78,11 @@
   <a class="btn btn-primary m-4" href="{% url 'checkout' %}" 
   role="button">Checkout</a>
 
+{% else %}
+
+
+<h1>Cart is empty</h1>
+<img src="{% static '/img/cart_empty.png' %}" alt="">
+
+{% endif %}
 {% endblock%} 

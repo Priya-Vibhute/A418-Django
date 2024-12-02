@@ -31,6 +31,8 @@ def add_to_cart(request,productId):
     print("request.META.get('HTTP_REFERER')",request.META.get("HTTP_REFERER"))
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
+    
+
 @login_required(login_url="/login")
 def display_cart(request):
     currentUser=request.user
@@ -114,11 +116,19 @@ def paymentSuccess(request,orderId):
         order=Order.objects.get(order_id=orderId)
         order.paid=True
         order.save()
+
         send_mail(f"[{order.order_id} placed]",
                   "Order placed successfully...",
                   EMAIL_HOST_USER,
                   ["artilachure@gmail.com","shankkarpal46@gmail.com","tgorivale2@gmail.com"],
                   fail_silently=False)
+        
+        currentUser=request.user
+        cart=Cart.objects.get(user=currentUser)
+        cartitems=cart.cartitem_set.all()
+        total=0
+        for cartitem in  cartitems:
+             cartitem.delete()
 
     return render(request,"success.html")
 
